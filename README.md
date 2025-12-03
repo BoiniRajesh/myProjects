@@ -1,2 +1,2 @@
 # myProjects
-dedicated to my projects
+This folder is dedicated to my Btech Projects.
