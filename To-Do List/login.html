@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login / Signup</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;500;700&display=swap");
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Raleway", sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(to right, #c2e9fb, #a1c4fd);
+    }
+
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      width: 360px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 30px;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      background: #f5f5f5;
+      font-weight: 600;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .tab.active {
+      background: linear-gradient(to right, #d4fc79, #96e6a1);
+      color: black;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .password-strength {
+      height: 8px;
+      border-radius: 4px;
+      background-color: #e0e0e0;
+      margin-bottom: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .password-strength-bar {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .strength-weak {
+      background-color: #ff4d4d;
+      width: 33%;
+    }
+
+    .strength-medium {
+      background-color: #ffa500;
+      width: 66%;
+    }
+
+    .strength-strong {
+      background-color: #4caf50;
+      width: 100%;
+    }
+
+    .link {
+      font-size: 13px;
+      color: #007bff;
+      text-align: right;
+      display: block;
+      margin-bottom: 20px;
+      text-decoration: none;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background: linear-gradient(to right, #89f7fe, #66a6ff);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .footer a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .error {
+      color: #ff4d4d;
+      font-size: 13px;
+      margin-bottom: 10px;
+      display: none;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="tabs">
+      <div class="tab active" id="loginTab">Login</div>
+      <div class="tab" id="signupTab">SignUp</div>
+    </div>
+
+    <h2 id="formTitle">Login</h2>
+
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" oninput="checkStrength(this.value)" />
+    <input type="password" id="confirmPassword" placeholder="Confirm Password" style="display: none;" />
+    <div class="error" id="passwordError">Passwords do not match</div>
+    <div class="error" id="loginError">Please enter both username and password</div>
+
+    <div class="password-strength">
+      <div class="password-strength-bar" id="strengthBar"></div>
+    </div>
+
+    <a href="#" class="link">Reset password?</a>
+
+    <button class="btn" id="formButton">Login</button>
+
+    <div class="footer">
+      Don't Have Account? <a href="#">Create A New</a>
+    </div>
+  </div>
+
+  <script>
+    const loginTab = document.getElementById("loginTab");
+    const signupTab = document.getElementById("signupTab");
+    const formTitle = document.getElementById("formTitle");
+    const formButton = document.getElementById("formButton");
+    const confirmPassword = document.getElementById("confirmPassword");
+    const password = document.getElementById("password");
+    const username = document.getElementById("username");
+    const passwordError = document.getElementById("passwordError");
+    const loginError = document.getElementById("loginError");
+
+    loginTab.onclick = () => {
+      loginTab.classList.add("active");
+      signupTab.classList.remove("active");
+      formTitle.innerText = "Login";
+      formButton.innerText = "Login";
+      confirmPassword.style.display = "none";
+      passwordError.style.display = "none";
+      loginError.style.display = "none";
+    };
+
+    signupTab.onclick = () => {
+      signupTab.classList.add("active");
+      loginTab.classList.remove("active");
+      formTitle.innerText = "Sign Up";
+      formButton.innerText = "Sign Up";
+      confirmPassword.style.display = "block";
+      loginError.style.display = "none";
+      checkPasswordMatch();
+    };
+
+    function checkStrength(password) {
+      const bar = document.getElementById("strengthBar");
+      bar.className = "password-strength-bar";
+
+      let strength = 0;
+      if (password.length >= 6) strength++;
+      if (password.match(/[A-Z]/)) strength++;
+      if (password.match(/[0-9]/)) strength++;
+      if (password.match(/[^a-zA-Z0-9]/)) strength++;
+
+      if (strength <= 1) {
+        bar.classList.add("strength-weak");
+      } else if (strength === 2 || strength === 3) {
+        bar.classList.add("strength-medium");
+      } else {
+        bar.classList.add("strength-strong");
+      }
+    }
+
+    function checkPasswordMatch() {
+      const passwordValue = password.value;
+      const confirmPasswordValue = confirmPassword.value;
+      if (signupTab.classList.contains("active") && passwordValue !== confirmPasswordValue) {
+        passwordError.style.display = "block";
+      } else {
+        passwordError.style.display = "none";
+      }
+    }
+
+    password.oninput = () => {
+      checkStrength(password.value);
+      checkPasswordMatch();
+    };
+
+    confirmPassword.oninput = checkPasswordMatch;
+
+    formButton.onclick = () => {
+      if (loginTab.classList.contains("active")) {
+        if (!username.value || !password.value) {
+          loginError.style.display = "block";
+        } else {
+          loginError.style.display = "none";
+          window.location.href = "index.html";
+        }
+      }
+    };
+  </script>
+</body>
+</html>
